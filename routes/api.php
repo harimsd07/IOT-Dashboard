@@ -4,6 +4,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DevicesController;
+use App\Http\Controllers\LedController;
 use App\Http\Controllers\MetricsController;
 use App\Http\Controllers\TemperatureHumidityController;
 use App\Http\Controllers\TestController;
@@ -36,9 +37,35 @@ Route::get('/health', function() {
 });
 
 
-
+/*
 Route::get('/led-control',[TestController::class,'show']);
 Route::get('/led-control/status',[TestController::class,'checkStatus']);
 Route::post('/led-status',[TestController::class,'store']);
+*/
 
 
+Route::get('ledStatusGet',[LedController::class,'show']);
+Route::post('ledStatusPost',[LedController::class,'store']);
+
+use Illuminate\Http\Request;
+use GuzzleHttp\Client;
+
+Route::post('/led/off', function () {
+    $client = new Client();
+    try {
+        $response = $client->get('http://192.168.116.57/on'); // Replace with your NodeMCU's IP
+        return response()->json(['status' => 'LED turned OFF']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to connect to NodeMCU'], 500);
+    }
+});
+
+Route::post('/led/on', function () {
+    $client = new Client();
+    try {
+        $response = $client->get('http://192.168.116.57/off'); // Replace with your NodeMCU's IP
+        return response()->json(['status' => 'LED turned ON']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to connect to NodeMCU'], 500);
+    }
+});

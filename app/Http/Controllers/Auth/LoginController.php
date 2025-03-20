@@ -45,6 +45,12 @@ class LoginController extends Controller
             if ($user->role == 'admin')
             {
                 return redirect()->route('welcome-admin');
+                // $admin_token = $user->createToken('admin_access_token')->plainTextToken;
+                // return response()->json([
+                //     'status' =>1,
+                //     "message" =>"Admin logined successfully",
+                //     "token" =>$admin_token
+                //    ]);
             } elseif($user->role == 'user')
                     {
                         $request->validate(
@@ -62,14 +68,15 @@ if(isset($devices->id))
                                     // create a token
                                     $token = $devices->createToken("access_Token")->plainTextToken;
 
-                                    // send a response
-                                    return redirect()->route('user-dashboard',['id' => $user->id]);
 
-                                    //    return response()->json([
-                                    //     'status' =>1,
-                                    //     "message" =>"user logined successfully",
-                                    //     "token" =>$token
-                                    //    ]);
+                                    // send a response
+                                    // return redirect()->route('user-dashboard',['id' => $user->id]);
+
+                                       return response()->json([
+                                        'status' =>1,
+                                        "message" =>"user logined successfully",
+                                        "token" =>$token
+                                       ]);
                                 }
 
                         if (Auth::guard()->attempt($request->only('email', 'password')))
